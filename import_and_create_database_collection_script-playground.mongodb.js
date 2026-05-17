@@ -5,8 +5,8 @@
 const fs   = require('fs');
 
 // ── Configurações ──────────────────────────────────────────────────────────
-const DATABASE   = 'loto_facil_vscode';
-const COLLECTION = 'loto_facil_raw';
+const DATABASE   = 'lotofacil_raw';
+const COLLECTION = 'concursos';
 
 // Caminho absoluto para o CSV — ajuste se mover o repositório.
 const CSV_PATH = 'c:\\Users\\dhion_26s925f\\Documents\\git\\banco_de_dados_nao_relacional\\LotoFacil\\database\\Lotofácil.csv';
