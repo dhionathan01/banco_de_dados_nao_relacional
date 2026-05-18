@@ -34,7 +34,24 @@ db.concursos_clean.aggregate([
     $unwind: '$localizacoes'
   },
 
-  // 5. Projeta campos limpos — uma linha = um concurso + uma UF
+  // 5. Extrai só a sigla da UF: "CIDADE/UF" → "UF", "UF" → "UF"
+  {
+    $addFields: {
+      uf: {
+        $trim: {
+          input: {
+            $cond: {
+              if: { $regexMatch: { input: '$localizacoes', regex: '/' } },
+              then: { $arrayElemAt: [{ $split: ['$localizacoes', '/'] }, -1] },
+              else: '$localizacoes'
+            }
+          }
+        }
+      }
+    }
+  },
+
+  // 6. Projeta campos limpos — uma linha = um concurso + uma UF
   {
     $project: {
       _id: 0,
@@ -44,7 +61,7 @@ db.concursos_clean.aggregate([
       dataSorteio: {
         $dateToString: { format: '%Y-%m-%d', date: '$dataSorteio' }
       },
-      uf: '$localizacoes',
+      uf: 1,
       ganhadores15: '$ganhadores15Num',
       premioEstimado: 1
     }
@@ -56,7 +73,7 @@ db.concursos_clean.aggregate([
   },
 
   {
-    $out: 'winners_powerBI'
+    $out: 'winners_powerBI_refactor'
   }
 
 ]);
